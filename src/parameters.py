@@ -42,7 +42,7 @@ class parameters:
         self.arg_action = '\0'
         self.script = 0
         self.arg_mask_to_generate = -1
-        self.arg_project = 'pvs'
+        self.arg_project = '\0'
         self.manual = '/opt/pvb/doc/index.html'
         self.fake_qmake = ''
 

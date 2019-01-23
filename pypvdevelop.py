@@ -25,7 +25,7 @@ start file
 try:
    import sys
    from src import paths
-   import parameters, global_defines, resources
+   import parameters, global_defines, resources, utils
    from parse import parse
    import main_win
 except ImportError as err:
@@ -37,6 +37,7 @@ class py_pv_develop():
         self.num_args = len(sys.argv)
         self.args = sys.argv
         self.parameters = parameters.parameters()
+        self.parameters.initialize()
         self.get_args()
         
     def read_project(self):
@@ -103,7 +104,7 @@ class py_pv_develop():
     def get_args(self):
         for arg in self.args:
             if arg[:6] == '-debug':
-                self.parameters.debug = 1
+                self.parameters.arg_debug = 1
             elif arg[:8] == '-action=':
                 self.parameters.arg_action = parse("-action={}",arg)[0]
             elif arg[:22] == '-programming_language=':
@@ -122,7 +123,7 @@ class py_pv_develop():
                     print("programming_language=%s not supported" % buffer)
             elif arg[:5] == '-fake':
                 self.parameters.fake_qmake='-fake'
-            elif (not arg.startswith('-') and (arg != './pypvdevelop')):
+            elif (not arg.startswith('-') and (arg != './pypvdevelop.py')):
                 self.parameters.arg_project = arg
                 try:
                     self.parameters.arg_project = parse("{}.{}",arg)[0]
@@ -133,8 +134,12 @@ class py_pv_develop():
                 self.usage()
     
     def analyze_actions(self):
-        
-            
+        if self.parameters.arg_action == '\0': #no actions provided
+            return
+        if self.parameters.arg_project == '\0':
+            print("no project given")
+            self.usage()
+        utils.action(self.parameters.arg_action)
     def run(self):
         my_main_window = main_win.main_window()
         my_main_window.run()
