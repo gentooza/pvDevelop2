@@ -45,4 +45,5 @@ class parameters:
         self.arg_project = '\0'
         self.manual = '/opt/pvb/doc/index.html'
         self.fake_qmake = ''
+        self.target = ''
 

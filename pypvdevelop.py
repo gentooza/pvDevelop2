@@ -43,34 +43,56 @@ class py_pv_develop():
     def read_project(self):
         project_file_path = self.parameters.arg_project
         project_file_path += '.pvproject'
-        project_file = open(project_file_path,'r')
-
-        #previously resetting basic parameters     NO NEED
-        #self.parameters.target = 'pvs'
-        #self.parameters.xmax = 1280
-        #self.parameters.xmax = 1024
-        #self.parameters.script = 0          
+        try:
+            project_file = open(project_file_path,'r')
+            
+            for line in project_file:
+                if '\n' == line[-1]:
+                    line = line[:-1]
+                if line[:7] == 'target=':
+                    self.parameters.target = parse("target={}",line)[0]
+                elif line[:5] == 'xmax=':
+                    self.parameters.xmax = parse("xmax={}",line)[0]
+                elif line[:5] == 'ymax=':
+                    self.parameters.ymax = parse("ymax={}",line)[0]
+                elif line[:13] == 'script=Python':
+                    self.parameters.script = global_defines.PV_PYTHON
+                elif line[:11] == 'script=Perl':
+                    self.parameters.script = global_defines.PV_PERL
+                elif line[:10] == 'script=PHP':
+                    self.parameters.script = global_defines.PV_PHP
+                elif line[:10] == 'script=Tcl':
+                    self.parameters.script = global_defines.PV_TCL
+                elif line[:10] == 'script=Lua':
+                    self.parameters.script = global_defines.PV_LUA
+                    # add additional language here
+        except:
+            
+            if(self.parameters.arg_debug):
+                print('creating new empty one')
+            project_file = open(project_file_path,'w')
+            self.parameters.target = 'pvs'
+            lines = [ 'target='.format(self.parameters.target),
+                     'xmax={0}'.format(self.parameters.xmax),
+                     'ymax={0}'.format(self.parameters.ymax)
+]
+            if self.parameters.script == global_defines.PV_PYTHON:
+                lines.append('script=Python')
+            elif self.parameters.script == global_defines.PV_PERL:
+                lines.append('script=Perl')
+            elif self.parameters.script == global_defines.PV_PHP:
+                lines.append('script=PHP')
+            elif self.parameters.script == global_defines.PV_TCL:
+                lines.append('script=Tcl')
+            elif self.parameters.script == global_defines.PV_LUA:
+                lines.append('script=Lua')                
+                
+            project_file.writelines(lines)
+            project_file.close()
+       
         
-        for line in project_file:
-            if '\n' == line[-1]:
-                line = line[:-1]
-            if line[:7] == 'target=':
-                self.parameters.target = parse("target={}",line)[0]
-            elif line[:5] == 'xmax=':
-                self.parameters.xmax = parse("xmax={}",line)[0]
-            elif line[:5] == 'ymax=':
-                self.parameters.ymax = parse("ymax={}",line)[0]
-            elif line[:13] == 'script=Python':
-                self.parameters.script = global_defines.PV_PYTHON
-            elif line[:11] == 'script=Perl':
-                self.parameters.script = global_defines.PV_PERL
-            elif line[:10] == 'script=PHP':
-                self.parameters.script = global_defines.PV_PHP
-            elif line[:10] == 'script=Tcl':
-                self.parameters.script = global_defines.PV_TCL
-            elif line[:10] == 'script=Lua':
-                self.parameters.script = global_defines.PV_LUA
-            # add additional language here
+
+ 
         if(self.parameters.arg_debug):
             print('Project: target=%s xmax=%s ymax=%s script=%s\n '% (self.parameters.target, self.parameters.xmax, self.parameters.ymax, self.parameters.script))
         project_file.close()
@@ -129,7 +151,7 @@ class py_pv_develop():
                     self.parameters.arg_project = parse("{}.{}",arg)[0]
                 except:
                     pass
-                self.read_project()                    
+                self.read_project()
             elif arg[:1] == '-' or arg[:2] == '-h' or arg[:5] == '-help':
                 self.usage()
     
