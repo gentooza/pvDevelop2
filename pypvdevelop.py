@@ -72,7 +72,7 @@ class py_pv_develop():
                 self.parameters.script = global_defines.PV_LUA
             # add additional language here
         if(self.parameters.arg_debug):
-            print("Project: target=%s xmax=%d ymax=%d script=%d\n"% self.parameters.target, self.parameters.xmax, self.parameters.ymax, self.parameters.script)
+            print('Project: target=%s xmax=%s ymax=%s script=%s\n '% (self.parameters.target, self.parameters.xmax, self.parameters.ymax, self.parameters.script))
         project_file.close()
         
     def usage(self):
