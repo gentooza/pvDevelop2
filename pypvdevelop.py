@@ -25,7 +25,7 @@ start file
 try:
    import sys
    from src import paths
-   import parameters, global_defines, resources, utils
+   import parameters, global_defines, resources, utils, home_configurator
    from parse import parse
    import main_win
 except ImportError as err:
@@ -162,6 +162,10 @@ class py_pv_develop():
             print("no project given")
             self.usage()
         utils.action(self.parameters.arg_action)
+
+    def local_configuration(self):
+        home_configurator.check_and_create_home()
+    
     def run(self):
         my_main_window = main_win.main_window()
         my_main_window.run()
@@ -169,4 +173,5 @@ class py_pv_develop():
 my_app = py_pv_develop()
 #not going to initialize global OPT pvbrowser tags, neither load a ini file
 my_app.analyze_actions()
+my_app.local_configuration()
 my_app.run()

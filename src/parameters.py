@@ -80,7 +80,7 @@ class parameters:
         self.view_txt=''
         self.view_html=''
         self.language=''
-        self.codec=pvbUTF8
+        self.codec=global_defines.pvbUTF8
         #QT and versions
         self.QT_version = 0x040601
         self.use_webkit_for_svg=1
