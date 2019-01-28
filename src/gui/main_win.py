@@ -37,12 +37,26 @@ except ImportError as err:
 class main_window(Gtk.Window):
 
     def __init__(self):
-        Gtk.Window.__init__(self, title="Python Pvbrowser Developer")
-        self.set_icon_from_file(resources.IMG_APP_ICON)
+        my_parameters = parameters.parameters()
+        if my_parameters.arg_project:
+            my_title = my_parameters.arg_project + ' - Python Pvbrowser Developer'
+        else:
+            my_title = 'No project loaded - Python Pvbrowser Developer'
+        Gtk.Window.__init__(self, title=my_title, deletable = True)
+        self.set_default_icon_from_file(resources.IMG_APP_ICON)
         self.set_border_width(3)
-
+        self.set_resizable(True)
+        self.maximize()
+        
+        main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        
+        #menus
+        box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        box.pack_start(self._file_menu(),True,True,0)
+        main_box.pack_start(box,False,True,0)
+        
         self.notebook = Gtk.Notebook()
-        self.add(self.notebook)
+        main_box.pack_start(self.notebook,True,True,0)
 
         self.page1 = Gtk.Box()
         self.page1.set_border_width(10)
@@ -59,6 +73,21 @@ class main_window(Gtk.Window):
                 Gtk.IconSize.MENU
             )
         )
+        self.add(main_box)
+        
+    def _file_menu(self):
+        file_menu = Gtk.Menu()
+        file_menu.set_title('File')
+        
+        item_options = Gtk.MenuItem('Options')
+        item_separator = Gtk.SeparatorMenuItem()
+        
+        file_menu.append(item_options)
+        file_menu.append(item_separator)
+        file_menu.show_all()
+        
+        return file_menu
+
     def run(self):
         self.connect("destroy", Gtk.main_quit)
         self.show_all()
