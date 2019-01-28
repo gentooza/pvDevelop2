@@ -56,26 +56,35 @@ def action(command):
             print(" executing: %s"%new_command)
         my_system(new_command)  
     #insertMask
-    elif command[:11] == 'insertMask=':
+    elif command[:11] == 'insertMask=' or command[:10] == 'insertMask':
         extension='.cpp'
         if my_parameters.script == global_defines.PV_LUA:
             extension = '.lua'
-            
-        project = parse("insertMask={}",command)[0]
-        project += '.pro'
-
-        file = 'mask{0}' + extension
-        index = 1
-        while Path(file.format(str(index))).exists():
-            index +=1
-        file = file.format(index)
-        generate_initial_mask(index)
-        generate_initial_slots(index)
-        if my_parameters.script != global_defines.PV_LUA:
-            add_mask_to_project(project,index) #add masks to project.pro QMAKE file
-        add_mask_to_main(index)
-        if my_parameters.script != global_defines.PV_LUA:
-            add_mask_to_header(index)
+        try:    
+            project = parse("insertMask={}",command)[0]
+        except:
+            project = ''
+        if not project:
+            project = my_parameters.arg_project
+            project += '.pro'         
+        else:
+            project += '.pro'
+        
+        if Path(project).exists() and Path('pvapp.h').exists() and Path('main.cpp').exists():
+            file = 'mask{0}' + extension
+            index = 1
+            while Path(file.format(str(index))).exists():
+                index +=1
+            file = file.format(index)
+            generate_initial_mask(index)
+            generate_initial_slots(index)
+            if my_parameters.script != global_defines.PV_LUA:
+                add_mask_to_project(project,index) #add masks to project.pro QMAKE file
+            add_mask_to_main(index)
+            if my_parameters.script != global_defines.PV_LUA:
+                add_mask_to_header(index)
+        else:
+            print("cannot create mask.cpp and mask_slots.h files,check project name is provided and the qmake .pro, pvapp.h, and main.cpp files exist")
     #make
 
     else:
@@ -585,7 +594,6 @@ def add_mask_to_header(index):
         else:
             new_file_content.append(line)
   
-
     file_handler.seek(0)
     file_handler.writelines(new_file_content)   
     file_handler.close()

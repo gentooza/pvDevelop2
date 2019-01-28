@@ -28,3 +28,7 @@ PV_PERL = 2
 PV_PHP = 3
 PV_TCL = 4
 PV_LUA = 5
+
+#codecs
+pvbUTF8 = 0
+pvbNone = 1
