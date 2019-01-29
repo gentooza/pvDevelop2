@@ -29,6 +29,7 @@ try:
    import global_defines
    from parse import parse
    import main_win
+   import main_menu
 except ImportError as err:
    print("couldn't load module. %s" % (err))
    sys.exit(2)
@@ -50,13 +51,14 @@ class main_window(Gtk.Window):
         
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         
-        #menus
-        box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        box.pack_start(self._file_menu(),True,True,0)
-        main_box.pack_start(box,False,True,0)
+        #menu
+        self.ui_manager = main_menu.main_menu(self)
+        menu_bar = self.ui_manager.get_widget("/MenuBar")
+        self.ui_manager.set_actions(self)
+        main_box.pack_start(menu_bar,False,False,0)
         
         self.notebook = Gtk.Notebook()
-        main_box.pack_start(self.notebook,True,True,0)
+        main_box.pack_start(self.notebook,False,False,0)
 
         self.page1 = Gtk.Box()
         self.page1.set_border_width(10)
@@ -75,18 +77,24 @@ class main_window(Gtk.Window):
         )
         self.add(main_box)
         
-    def _file_menu(self):
-        file_menu = Gtk.Menu()
-        file_menu.set_title('File')
-        
-        item_options = Gtk.MenuItem('Options')
-        item_separator = Gtk.SeparatorMenuItem()
-        
-        file_menu.append(item_options)
-        file_menu.append(item_separator)
-        file_menu.show_all()
-        
-        return file_menu
+    def on_menu_file_new_generic(self, widget):
+        print("A File|New menu item was selected.")
+
+    def on_menu_file_quit(self, widget):
+        Gtk.main_quit()
+
+    def on_menu_others(self, widget):
+        print("Menu item " + widget.get_name() + " was selected")
+
+    def on_menu_choices_changed(self, widget, current):
+        print(current.get_name() + " was selected.")
+
+    def on_menu_choices_toggled(self, widget):
+        if widget.get_active():
+            print(widget.get_name() + " activated")
+        else:
+            print(widget.get_name() + " deactivated")
+
 
     def run(self):
         self.connect("destroy", Gtk.main_quit)
