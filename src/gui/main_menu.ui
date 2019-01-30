@@ -1,6 +1,5 @@
-#!/usr/bin/env python3
-
-"""
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
 This file is part of pyPvDevelop.
 
 Copyright 2019, Joaquín Cuéllar-
@@ -17,28 +16,30 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with pyPvDevelop.  
 If not, see <https://www.gnu.org/licenses/>.
-"""
-
-"""resources.py - images path and resources.
-"""
-import sys
-import os
-try:
-   import gi
-   gi.require_version('Gtk', '3.0')
-   from gi.repository import Gtk, Gdk, Gio
-   from src import paths
-except ImportError as err:
-   print("couldn't load module. %s" % (err))
-   sys.exit(2)
-
-# add additional language here
-IMG_APP_ICON = paths.abs_progdir+'/images/app.png'
-#menu icons
-ICON_OPTIONS = Gio.FileIcon()
-ICON_OPTIONS.new(Gio.File.new_for_path(paths.abs_progdir+'/images/option.png'))
-#menu_xml_GTK_descriptors
-UI_MAIN_MENU = paths.abs_progdir+'/src/gui/main_menu.ui'
-
-
-
+-->
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <menu id="menubar">
+    <submenu>
+      <attribute name="label">File</attribute>
+    </submenu>
+    <submenu>
+      <attribute name="label">Edit</attribute>
+    </submenu>
+    <submenu>
+      <attribute name="label">Action</attribute>
+    </submenu>
+    <submenu>
+      <attribute name="label">RLlib</attribute>
+    </submenu>
+    <submenu>
+      <attribute name="label">Daemon</attribute>
+    </submenu>
+    <submenu>
+      <attribute name="label">Linux</attribute>
+    </submenu>
+    <submenu>
+      <attribute name="label">Help</attribute>
+    </submenu>
+  </menu>
+</interface>

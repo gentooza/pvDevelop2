@@ -29,21 +29,20 @@ try:
    import global_defines
    from parse import parse
    import main_win
-   import main_menu
 except ImportError as err:
    print("couldn't load module. %s" % (err))
    sys.exit(2)
 
 
-class main_window(Gtk.Window):
+class main_window(Gtk.ApplicationWindow):
 
-    def __init__(self):
+    def __init__(self,app):
         my_parameters = parameters.parameters()
         if my_parameters.arg_project:
             my_title = my_parameters.arg_project + ' - Python Pvbrowser Developer'
         else:
             my_title = 'No project loaded - Python Pvbrowser Developer'
-        Gtk.Window.__init__(self, title=my_title, deletable = True)
+        Gtk.Window.__init__(self, title=my_title, deletable = True, application=app)
         self.set_default_icon_from_file(resources.IMG_APP_ICON)
         self.set_border_width(3)
         self.set_resizable(True)
@@ -51,11 +50,6 @@ class main_window(Gtk.Window):
         
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         
-        #menu
-        self.ui_manager = main_menu.main_menu(self)
-        menu_bar = self.ui_manager.get_widget("/MenuBar")
-        self.ui_manager.set_actions(self)
-        main_box.pack_start(menu_bar,False,False,0)
         
         self.notebook = Gtk.Notebook()
         main_box.pack_start(self.notebook,False,False,0)
@@ -77,26 +71,3 @@ class main_window(Gtk.Window):
         )
         self.add(main_box)
         
-    def on_menu_file_new_generic(self, widget):
-        print("A File|New menu item was selected.")
-
-    def on_menu_file_quit(self, widget):
-        Gtk.main_quit()
-
-    def on_menu_others(self, widget):
-        print("Menu item " + widget.get_name() + " was selected")
-
-    def on_menu_choices_changed(self, widget, current):
-        print(current.get_name() + " was selected.")
-
-    def on_menu_choices_toggled(self, widget):
-        if widget.get_active():
-            print(widget.get_name() + " activated")
-        else:
-            print(widget.get_name() + " deactivated")
-
-
-    def run(self):
-        self.connect("destroy", Gtk.main_quit)
-        self.show_all()
-        Gtk.main()

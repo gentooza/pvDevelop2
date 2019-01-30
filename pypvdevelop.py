@@ -28,17 +28,41 @@ try:
    import parameters, global_defines, resources, utils, home_configurator
    from parse import parse
    import main_win
+   from gi.repository import Gtk
 except ImportError as err:
    print("couldn't load module. %s" % (err))
    sys.exit(2)
 
-class py_pv_develop():
+class py_pv_develop(Gtk.Application):
     def __init__(self):
+        Gtk.Application.__init__(self)
         self.num_args = len(sys.argv)
         self.args = sys.argv
         self.parameters = parameters.parameters()
         self.parameters.initialize()
         self.get_args()
+    
+    def do_activate(self):
+        win = main_win.main_window(self)
+        win.show_all()
+        
+    
+    def do_startup(self):
+        Gtk.Application.do_startup(self)
+
+        # a builder to add the UI designed with Glade to the grid:
+        builder = Gtk.Builder()
+        # get the file (if it is there)
+        try:
+            builder.add_from_file(resources.UI_MAIN_MENU)
+        except Exception as e:
+            print(e)
+            print("can't open UI file")
+            sys.exit()
+
+        # we use the method Gtk.Application.set_menubar(menubar) to add the menubar
+        # to the application (Note: NOT the window!)
+        self.set_menubar(builder.get_object("menubar"))
         
     def read_project(self):
         project_file_path = self.parameters.arg_project
@@ -166,12 +190,9 @@ class py_pv_develop():
     def local_configuration(self):
         home_configurator.check_and_create_home()
     
-    def run(self):
-        my_main_window = main_win.main_window()
-        my_main_window.run()
-
 my_app = py_pv_develop()
-#not going to initialize global OPT pvbrowser tags, neither load a ini file
+#not going to initialize global OPT pvbrowser tags
 my_app.analyze_actions()
 my_app.local_configuration()
-my_app.run()
+exit_status = my_app.run(sys.argv)
+sys.exit(exit_status)
