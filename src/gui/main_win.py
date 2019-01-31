@@ -28,7 +28,7 @@ try:
    import resources
    import global_defines
    from parse import parse
-   import main_win
+   import tree_widget
 except ImportError as err:
    print("couldn't load module. %s" % (err))
    sys.exit(2)
@@ -47,9 +47,11 @@ class main_window(Gtk.ApplicationWindow):
         self.set_border_width(3)
         self.set_resizable(True)
         self.maximize()
+
+        self.project_tree = tree_widget.tree_widget() 
         
-        main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        
+        main_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        main_box.pack_start(self.project_tree,False,False,0)        
         
         self.notebook = Gtk.Notebook()
         main_box.pack_start(self.notebook,False,False,0)
