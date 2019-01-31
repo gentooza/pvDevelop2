@@ -21,7 +21,7 @@ If not, see <https://www.gnu.org/licenses/>.
 try:
    import gi
    gi.require_version('Gtk', '3.0')
-   from gi.repository import Gtk
+   from gi.repository import Gtk, Gio
    import sys
    from src import paths
    import parameters
@@ -68,6 +68,30 @@ class main_window(Gtk.ApplicationWindow):
                 "help-about",
                 Gtk.IconSize.MENU
             )
+            
         )
         self.add(main_box)
+        self.set_menu_actions()
         
+    def set_menu_actions(self):
+        # action without a state created (name, parameter type)
+        exit_action = Gio.SimpleAction.new("exit", None)
+        # connected with the callback function
+        exit_action.connect("activate", self.exit_callback)
+        # added to the window
+        self.add_action(exit_action)
+        
+    def exit_callback(self,action,parameter):
+        #TODO:to implement closing process
+        #if no editor -> viewEditor();
+        #if(maybeSave())
+        #{
+        #writeSettings();
+        #if(dlgtextbrowser != NULL) delete dlgtextbrowser;
+        #WE CLOSE!
+        #}
+        #else
+        #{
+        #WE DONT CLOSE
+        #}
+        self.destroy()

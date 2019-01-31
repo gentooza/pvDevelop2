@@ -32,11 +32,15 @@ except ImportError as err:
    print("couldn't load module. %s" % (err))
    sys.exit(2)
 
+
+ICONS_FOLDER = Gio.File.new_for_path(paths.abs_progdir+'/images/')
+
 # add additional language here
 IMG_APP_ICON = paths.abs_progdir+'/images/app.png'
 #menu icons
-ICON_OPTIONS = Gio.FileIcon()
-ICON_OPTIONS.new(Gio.File.new_for_path(paths.abs_progdir+'/images/option.png'))
+
+ICON_OPTIONS = Gio.FileIcon.new(ICONS_FOLDER.get_child('option.png'))
+#ICON_OPTIONS = ICON_OPTIONS_.serialize()
 #menu_xml_GTK_descriptors
 UI_MAIN_MENU = paths.abs_progdir+'/src/gui/main_menu.ui'
 

@@ -59,7 +59,7 @@ class py_pv_develop(Gtk.Application):
             print(e)
             print("can't open UI file")
             sys.exit()
-
+        
         # we use the method Gtk.Application.set_menubar(menubar) to add the menubar
         # to the application (Note: NOT the window!)
         self.set_menubar(builder.get_object("menubar"))
