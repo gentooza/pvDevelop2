@@ -37,9 +37,17 @@ class tree_widget(Gtk.TreeView):
 
     def __init__(self):
         store = Gtk.TreeStore(str)
-        store.append(None,["- no project -"])
+        project_iter = store.append(None,["- no project -"])
+        store.append(project_iter,["Base files"])
+        store.append(project_iter,["Mask files"])        
+        store.append(project_iter,["Slots files"]) 
+        rootiter = store.get_iter_first()
+        while rootiter is not None:
+            print(str(store[rootiter][:]))
+            rootiter = store.iter_next(rootiter)   
         Gtk.TreeView.__init__(self,store)
         
         renderer = Gtk.CellRendererText()
+        renderer.set_fixed_size(200, -1)
         column = Gtk.TreeViewColumn("name", renderer, text=0)
         self.append_column(column)

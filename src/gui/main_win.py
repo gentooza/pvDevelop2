@@ -48,13 +48,16 @@ class main_window(Gtk.ApplicationWindow):
         self.set_resizable(True)
         self.maximize()
 
-        self.project_tree = tree_widget.tree_widget() 
+        self.project_tree = tree_widget.tree_widget()
+        self.scrollable_treelist = Gtk.ScrolledWindow()
+        self.scrollable_treelist.set_policy(Gtk.PolicyType.NEVER,Gtk.PolicyType.AUTOMATIC)
+        self.scrollable_treelist.add(self.project_tree)
         
         main_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        main_box.pack_start(self.project_tree,False,False,0)        
+        main_box.pack_start(self.scrollable_treelist,False,True,0)        
         
         self.notebook = Gtk.Notebook()
-        main_box.pack_start(self.notebook,False,False,0)
+        main_box.pack_start(self.notebook,True,True,0)
 
         self.page1 = Gtk.Box()
         self.page1.set_border_width(10)
