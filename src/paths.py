@@ -33,5 +33,6 @@ abs_progdir = os.path.dirname(os.path.abspath(progname))
 sys.path.insert(0, os.path.normpath(os.path.join(progdir,'src')))
 sys.path.insert(0, os.path.normpath(os.path.join(progdir,'src','backend')))
 sys.path.insert(0, os.path.normpath(os.path.join(progdir,'src','gui')))
+sys.path.insert(0, os.path.normpath(os.path.join(progdir,'src','gui', 'menus')))
 sys.path.insert(0, os.path.normpath(os.path.join(progdir,'images')))
 

@@ -3,7 +3,7 @@
 """
 This file is part of pyPvDevelop.
 
-Copyright 2019, Joaquín Cuéllar-
+Copyright 2023, Joaquín Cuéllar-
 
 pyPvDevelop is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -23,47 +23,25 @@ If not, see <https://www.gnu.org/licenses/>.
 start file
 """
 try:
-   import sys
-   from src import paths
-   import parameters, global_defines, resources, utils, home_configurator
-   from parse import parse
-   import main_win
-   from gi.repository import Gtk
+    import sys
+    from src import paths
+    import parameters, global_defines, utils, home_configurator
+    from parse import parse
+    import mainwin
+    import tkinter as tk
 except ImportError as err:
-   print("couldn't load module. %s" % (err))
-   sys.exit(2)
+    print("couldn't load module. %s" % (err))
+    sys.exit(2)
 
-class py_pv_develop(Gtk.Application):
+class PyPvDevelop(tk.Tk):
     def __init__(self):
-        Gtk.Application.__init__(self)
+        tk.Tk.__init__(self)
         self.num_args = len(sys.argv)
         self.args = sys.argv
         self.parameters = parameters.parameters()
         self.parameters.initialize()
-        self.get_args()
-    
-    def do_activate(self):
-        win = main_win.main_window(self)
-        win.show_all()
-        
-    
-    def do_startup(self):
-        Gtk.Application.do_startup(self)
-
-        # a builder to add the UI designed with Glade to the grid:
-        builder = Gtk.Builder()
-        # get the file (if it is there)
-        try:
-            builder.add_from_file(resources.UI_MAIN_MENU)
-        except Exception as e:
-            print(e)
-            print("can't open UI file")
-            sys.exit()
-        
-        # we use the method Gtk.Application.set_menubar(menubar) to add the menubar
-        # to the application (Note: NOT the window!)
-        self.set_menubar(builder.get_object("menubar"))
-        
+        self.getArgs()
+            
     def read_project(self):
         project_file_path = self.parameters.arg_project
         project_file_path += '.pvproject'
@@ -147,7 +125,7 @@ class py_pv_develop(Gtk.Application):
         print("-programming_language=<Lua|Python>")
         print("- , -h, -help")
         
-    def get_args(self):
+    def getArgs(self):
         for arg in self.args:
             if arg[:6] == '-debug':
                 self.parameters.arg_debug = 1
@@ -179,7 +157,7 @@ class py_pv_develop(Gtk.Application):
             elif arg[:1] == '-' or arg[:2] == '-h' or arg[:5] == '-help':
                 self.usage()
     
-    def analyze_actions(self):
+    def analyzeActions(self):
         if self.parameters.arg_action == '\0': #no actions provided
             return
         if self.parameters.arg_project == '\0':
@@ -190,9 +168,14 @@ class py_pv_develop(Gtk.Application):
     def local_configuration(self):
         home_configurator.check_and_create_home()
     
-my_app = py_pv_develop()
+my_app = PyPvDevelop()
 #not going to initialize global OPT pvbrowser tags
-my_app.analyze_actions()
+my_app.analyzeActions()
 my_app.local_configuration()
-exit_status = my_app.run(sys.argv)
-sys.exit(exit_status)
+
+my_app.geometry("300x250+300+300")
+my_app.minsize(width=400, height=400)
+
+appWin = mainwin.MainWindow(my_app)
+appWin.build()
+my_app.mainloop()

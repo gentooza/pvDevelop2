@@ -29,9 +29,8 @@ try:
    import sys
    from pathlib import Path
    from src import paths
-   import parameters, global_defines, resources
+   import parameters, global_defines
    from parse import parse
-   import main_win
 except ImportError as err:
    print("couldn't load module. %s" % (err))
    sys.exit(2)
